@@ -1,7 +1,7 @@
 
 # ProxyLinker
 
-**ProxyLinker** is a Node.js-based reverse proxy system that enables you to access services running on devices behind NAT or firewalls without direct port forwarding. It creates a secure WebSocket tunnel between a Raspberry Pi (or any device) and a VPS, allowing traffic to flow seamlessly.
+**ProxyLinker** is a Node.js-based reverse proxy system that enables you to access services running on devices behind NAT or firewalls without direct port forwarding. It creates a secure WebSocket tunnel between a Raspberry Pi (or any device) and a Public Server, allowing traffic to flow seamlessly.
 
 ---
 
@@ -17,10 +17,10 @@
 ## 🛠️ How It Works
 
 1. The **Raspberry Pi** (or device without port forwarding) establishes a WebSocket connection to the **VPS**.
-2. The **VPS** acts as a reverse proxy, listening for incoming HTTP requests.
+2. The **Public Server** acts as a reverse proxy, listening for incoming HTTP requests.
 3. Incoming traffic on the VPS is forwarded to the Raspberry Pi through the WebSocket connection.
 4. The Raspberry Pi processes the request locally and sends the response back to the VPS.
-5. The VPS forwards the response to the client.
+5. The Public Server forwards the response to the client.
 
 ---
 
@@ -28,7 +28,7 @@
 
 ### Prerequisites
 
-- A VPS with a public IP address.
+- A Server with a public IP address.
 - Node.js and npm installed on both the VPS and Raspberry Pi.
 - A local server running on the Raspberry Pi (e.g., a web server on port 8080).
 
@@ -45,7 +45,7 @@ cd proxylinker
 
 ### 2. Install Dependencies
 
-On both the VPS and Raspberry Pi, install the required Node.js modules:
+On both the Public Server and Raspberry Pi, install the required Node.js modules:
 
 ```bash
 npm install ws http
@@ -55,14 +55,14 @@ npm install ws http
 
 ### 3. Configure and Start the VPS Server
 
-#### File: `vps.js`
+#### File: `node.js`
 
-Ensure the VPS server script is properly set up with the WebSocket and HTTP server.
+Ensure the Node server script is properly set up with the WebSocket and HTTP server.
 
-Start the VPS server:
+Start the node server:
 
 ```bash
-node vps.js
+node node.js
 ```
 
 The server listens on:
@@ -73,18 +73,18 @@ The server listens on:
 
 ### 4. Configure and Start the Raspberry Pi Client
 
-#### File: `raspberry-pi.js`
+#### File: `client.js`
 
 Update the WebSocket connection URL to point to your VPS:
 
 ```javascript
-const ws = new WebSocket("ws://<VPS_IP>:3000"); // Replace <VPS_IP> with your VPS's public IP
+const ws = new WebSocket("ws://<Node_IP>:3000"); // Replace <Node_IP> with your Node's public IP
 ```
 
 Start the Raspberry Pi client:
 
 ```bash
-node raspberry-pi.js
+node client.js
 ```
 
 ---
@@ -92,10 +92,10 @@ node raspberry-pi.js
 ### 5. Test the Setup
 
 1. Start a local server on the Raspberry Pi (e.g., serving content on port `8080`).
-2. Visit your VPS's public IP on port `8080` in a browser:
+2. Visit your Node's public IP on port `8080` in a browser:
 
 ```bash
-http://<VPS_IP>:8080
+http://<Node_IP>:8080
 ```
 
 You should see the content served by the Raspberry Pi!
